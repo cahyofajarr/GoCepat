@@ -1,0 +1,59 @@
+
+========================================================================================
+PETA KOTA (adjacency list berbasis array)
+========================================================================================
+14 persimpangan, 19 ruas jalan. tambahJalan(1, 0) sekali lagi -> ditolak karena duplikat
+  [ 0] Kampus Anggrek       derajat=2 kapasitas=4 : 1, 8
+  [ 1] Simpang Kemanggisan  derajat=4 kapasitas=4 : 0, 2, 3, 9
+  [ 2] Slipi Jaya           derajat=4 kapasitas=4 : 1, 3, 6, 5
+  [ 3] Palmerah             derajat=4 kapasitas=4 : 1, 2, 4, 5
+  [ 4] Senayan              derajat=2 kapasitas=4 : 3, 5
+  [ 5] Semanggi             derajat=5 kapasitas=8 : 2, 4, 10, 11, 3   <- array tumbuh dari 4 ke 8
+  [ 6] Tomang               derajat=3 kapasitas=4 : 2, 7, 10
+  [ 7] Grogol               derajat=2 kapasitas=4 : 6, 9
+  [ 8] Kebon Jeruk          derajat=2 kapasitas=4 : 0, 9
+  [ 9] Tanjung Duren        derajat=3 kapasitas=4 : 1, 7, 8
+  [10] Tanah Abang          derajat=3 kapasitas=4 : 5, 6, 11
+  [11] Bundaran HI          derajat=2 kapasitas=4 : 5, 10
+  [12] Pulau Pramuka        derajat=1 kapasitas=4 : 13
+  [13] Pulau Tidung         derajat=1 kapasitas=4 : 12
+
+Driver tersedia di: [3] Palmerah, [4] Senayan, [7] Grogol, [11] Bundaran HI
+
+========================================================================================
+PENCARIAN DRIVER TERDEKAT (syarat soal: 2 titik penumpang berbeda)
+========================================================================================
+
+>> Penumpang A di [0] Kampus Anggrek
+   bfsCariTerdekat(0, adalahDriver) = 3 -> Palmerah, jarak 2 hop
+   Rute jemput : [3] Palmerah -> [1] Simpang Kemanggisan -> [0] Kampus Anggrek
+   Urutan BFS  : 0(h0) 1(h1) 8(h1) 2(h2) 3(h2) -> 5 dari 14 simpul diproses
+   Cek silang  : hop ke tiap driver -> Palmerah=2; Senayan=3; Grogol=3; Bundaran HI=4; minimum = 2 [OK]
+
+>> Penumpang B di [10] Tanah Abang
+   bfsCariTerdekat(10, adalahDriver) = 11 -> Bundaran HI, jarak 1 hop
+   Rute jemput : [11] Bundaran HI -> [10] Tanah Abang
+   Urutan BFS  : 10(h0) 5(h1) 6(h1) 11(h1) -> 4 dari 14 simpul diproses
+   Cek silang  : hop ke tiap driver -> Palmerah=2; Senayan=2; Grogol=2; Bundaran HI=1; minimum = 1 [OK]
+
+========================================================================================
+KASUS TAMBAHAN
+========================================================================================
+
+>> Penumpang C (driver Palmerah sudah sibuk) di [0] Kampus Anggrek
+   bfsCariTerdekat(0, adalahDriver) = 4 -> Senayan, jarak 3 hop
+   Rute jemput : [4] Senayan -> [3] Palmerah -> [1] Simpang Kemanggisan -> [0] Kampus Anggrek
+   Urutan BFS  : 0(h0) 1(h1) 8(h1) 2(h2) 3(h2) 9(h2) 6(h3) 5(h3) 4(h3) -> 9 dari 14 simpul diproses
+   Cek silang  : hop ke tiap driver -> Senayan=3; Grogol=3; Bundaran HI=4; minimum = 3 [OK]
+   Catatan     : 2 driver seri pada 3 hop; BFS memilih yang lebih dulu masuk antrian
+
+>> Penumpang D (berdiri di lokasi driver) di [4] Senayan
+   bfsCariTerdekat(4, adalahDriver) = 4 -> Senayan, jarak 0 hop
+   Rute jemput : [4] Senayan
+   Urutan BFS  : 4(h0) -> 1 dari 14 simpul diproses
+   Cek silang  : hop ke tiap driver -> Palmerah=1; Senayan=0; Grogol=4; Bundaran HI=2; minimum = 0 [OK]
+
+>> Penumpang E (di pulau, tidak terhubung) di [12] Pulau Pramuka
+   bfsCariTerdekat(12, adalahDriver) = -1 -> tidak ada driver yang terjangkau
+   Urutan BFS  : 12(h0) 13(h1) -> 2 dari 14 simpul diproses
+   Cek silang  : hop ke tiap driver -> Palmerah=-; Senayan=-; Grogol=-; Bundaran HI=-; minimum = - [OK]

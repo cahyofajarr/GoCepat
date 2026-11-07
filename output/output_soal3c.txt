@@ -1,0 +1,30 @@
+
+========================================================================================
+RUAS JALAN DAN PANJANGNYA
+========================================================================================
+  [0] Kampus Anggrek - [1] Simpang Kemanggisan     0,7 km
+  [1] Simpang Kemanggisan - [2] Slipi Jaya         1,1 km
+  [2] Slipi Jaya - [3] Palmerah                    0,9 km
+  [0] Kampus Anggrek - [4] Gerbang Tol Tomang      1,6 km
+  [4] Gerbang Tol Tomang - [5] Exit Tol Meruya     8,2 km   (ruas tol panjang)
+  [1] Simpang Kemanggisan - [6] Tanjung Duren      1,4 km
+  [6] Tanjung Duren - [7] Grogol                   2,3 km
+  [7] Grogol - [4] Gerbang Tol Tomang              2,0 km
+
+========================================================================================
+JARAK DARI PENUMPANG DI [0] Kampus Anggrek KE SETIAP DRIVER
+========================================================================================
+  Dewi di [3] Palmerah           hop = 3   jarak jalan terpendek = 2,7 km
+  Rudi di [5] Exit Tol Meruya    hop = 2   jarak jalan terpendek = 9,8 km
+  Sari di [7] Grogol             hop = 2   jarak jalan terpendek = 3,6 km
+
+========================================================================================
+PERBANDINGAN HASIL
+========================================================================================
+BFS      (min. hop) -> Rudi, 2 hop, 9,8 km
+           rute: [5] Exit Tol Meruya -> [4] Gerbang Tol Tomang -> [0] Kampus Anggrek
+Dijkstra (min. km)  -> Dewi, 3 hop, 2,7 km
+           rute: [3] Palmerah -> [2] Slipi Jaya -> [1] Simpang Kemanggisan -> [0] Kampus Anggrek
+
+Pilihan BFS 3,6 kali lebih jauh, karena BFS menganggap setiap ruas jalan berbobot sama (1 hop).
+Dijkstra berhenti setelah memfinalkan 6 dari 8 simpul; simpul yang lebih jauh dari driver terdekat tidak perlu diproses.

@@ -1,0 +1,68 @@
+
+========================================================================================
+1a. POLYMORPHISM: satu pemanggilan hitungTarif(), perilaku berbeda
+========================================================================================
+Jarak                Motor           Mobil   Mobil Listrik
+----------------------------------------------------------
+1 km              Rp13.000        Rp16.000        Rp23.000
+3 km              Rp13.000        Rp24.000        Rp29.000
+5 km              Rp13.000        Rp32.000        Rp35.000
+8 km              Rp20.800        Rp44.000        Rp44.000
+12 km             Rp31.200        Rp60.000        Rp56.000
+20 km             Rp52.000        Rp92.000        Rp80.000
+
+Titik impas Mobil vs Mobil Listrik: 8 km (di bawahnya Mobil lebih murah, di atasnya Mobil Listrik lebih murah)
+
+========================================================================================
+1a. KONTRAK hitungTarif: diperiksa pada setiap kelas
+========================================================================================
+Syarat: jarak -1, NaN, dan Infinity ditolak; pada 3.001 titik 0-30 km (langkah 0,01 km) tarif >= 0 dan tidak turun
+  Motor           LOLOS
+  Mobil           LOLOS
+  Mobil Listrik   LOLOS
+
+========================================================================================
+1a(i). ALTERNATIF: enum JenisKendaraan dengan constant-specific method
+========================================================================================
+Konstanta            1 km      3 km      5 km      8 km     12 km     20 km
+---------------------------------------------------------------------------
+MOTOR            Rp13.000  Rp13.000  Rp13.000  Rp20.800  Rp31.200  Rp52.000
+MOBIL            Rp16.000  Rp24.000  Rp32.000  Rp44.000  Rp60.000  Rp92.000
+MOBIL_LISTRIK    Rp23.000  Rp29.000  Rp35.000  Rp44.000  Rp56.000  Rp80.000
+
+Cek konsistensi enum vs hierarki class: 18/18 tarif identik
+valueOf("MOBIL_LISTRIK") == MOBIL_LISTRIK: true (singleton, cukup dibandingkan dengan ==)
+valueOf("SEPEDA_LISTRIK") gagal -> jenis baru WAJIB mengubah source enum lalu kompilasi ulang
+
+========================================================================================
+1b. TRIP: aggregation (Driver, Penumpang, Kendaraan) vs composition (RincianTarif)
+========================================================================================
+[1] Sebelum ada trip: Budi (DRV-001, Motor [B 3456 KJT]), tersedia=true
+[2] Trip dibuat:
+    TRP-0001 | Ani dijemput Budi | Motor [B 3456 KJT] | 6,5 km: Rp16.900 + layanan Rp2.000 = Rp18.900 | BERJALAN
+    Budi sedang dipinjam trip1 -> tersedia=false
+[3] Order kedua untuk Budi ditolak: Budi sedang melayani trip lain
+[4] trip1 SELESAI -> Budi dikembalikan, tersedia=true, trip selesai=1
+[5] trip1 dibuang, Driver tetap ada: Budi (DRV-001, Motor [B 3456 KJT])
+[6] Driver yang SAMA melayani trip baru:
+    TRP-0003 | Citra dijemput Budi | Motor [B 3456 KJT] | 3 km: Rp13.000 + layanan Rp2.000 = Rp15.000 | BERJALAN
+[7] Budi ganti kendaraan -> Mobil Listrik [B 2024 EVX]
+    Riwayat trip2 tetap mencatat kendaraan saat itu: Motor [B 3456 KJT], total Rp15.000
+    Total trip selesai Budi: 2
+
+========================================================================================
+1c. EKSTENSIBILITAS: SepedaListrik ditambahkan TANPA mengubah Trip
+========================================================================================
+TRP-0004 | Dina dijemput Eko | Sepeda Listrik [SL-0007] | 2,5 km: Rp8.750 + layanan Rp2.000 = Rp10.750 | BERJALAN
+
+Kode pemanggil yang SAMA untuk semua jenis (tarif 4 km):
+  Motor           Rp13.000
+  Mobil           Rp28.000
+  Mobil Listrik   Rp32.000
+  Sepeda Listrik  Rp11.000
+
+Kontrak seragam (Liskov): pemeriksaan yang sama dengan bagian 1a, untuk SEMUA jenis
+  Motor           LOLOS
+  Mobil           LOLOS
+  Mobil Listrik   LOLOS
+  Sepeda Listrik  LOLOS
